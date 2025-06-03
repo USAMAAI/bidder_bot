@@ -29,6 +29,7 @@ class UpworkJobScraper:
         Scrapes Upwork job data based on the search query in batches of 5 jobs at a time.
         """
         url = f"https://www.upwork.com/nx/search/jobs?q={search_query}&sort=recency&page=1&per_page={num_jobs}"
+        print(f"DEBUG: Accessing URL: {url}")
 
         async with async_playwright() as playwright:
             browser = await playwright.firefox.launch(headless=True)
@@ -38,7 +39,14 @@ class UpworkJobScraper:
             # Scrape the main search page
             await page.goto(url)
             html_content = await page.content()
+            
+            # Save HTML content for debugging
+            with open("debug_upwork_page.html", "w", encoding="utf-8") as f:
+                f.write(html_content)
+            print("DEBUG: HTML content saved to debug_upwork_page.html")
+            
             jobs_links_list = self.extract_jobs_urls(html_content)
+            print(f"DEBUG: Found {len(jobs_links_list)} job links")
             await page.close()  # Ensure the page is closed
 
             semaphore = asyncio.Semaphore(self.batch_size)  # Limit concurrency to batch size tasks
@@ -85,7 +93,11 @@ class UpworkJobScraper:
         job_links = []
         skipped_count = 0
         
-        for h2 in soup.find_all('h2', class_='job-tile-title'):
+        # Debug: Check if we can find any h2 tags with job-tile-title class
+        h2_tags = soup.find_all('h2', class_='job-tile-title')
+        print(f"DEBUG: Found {len(h2_tags)} h2 tags with 'job-tile-title' class")
+        
+        for h2 in h2_tags:
             a_tag = h2.find('a')
             if a_tag:
                 job_link = a_tag['href'].replace('/jobs', 'https://www.upwork.com/freelance-jobs/apply', 1)
@@ -99,6 +111,8 @@ class UpworkJobScraper:
                 # clean the job url
                 job_link = job_link.split('?')[0] if '?' in job_link else job_link 
                 job_links.append(job_link)
+        
+        print(f"DEBUG: Total job links found: {len(job_links)}, Skipped (already in DB): {skipped_count}")
         
         if skipped_count > 0:
             print(f"Skipped {skipped_count} already collected jobs")

@@ -1,155 +1,178 @@
-# UpworkScribe AI: Automated Jobs Application on Upwork
+# 🚀 Codrivity Jobs Applier
 
-**UpworkScribe AI is not just a tool; it's your partner in navigating the competitive world of freelancing, helping you secure more projects and grow your freelance career. 🚀**
+> **AI-Powered Job Application Management System**  
+> *Empowering Codrivity's talent acquisition with intelligent automation*
 
-## The Challenge of Modern Freelancing
+## 🏢 About Codrivity
 
-The freelance marketplace has undergone a dramatic transformation in the digital age. While platforms like Upwork have opened up a world of opportunities, they have also intensified competition. Freelancers often find themselves spending countless hours searching for suitable projects, tailoring proposals, and crafting unique cover letters. This process can be not only time-consuming but also mentally exhausting, leading to missed opportunities and proposal fatigue.
+**Codrivity** is a forward-thinking technology company that leverages cutting-edge solutions to streamline business processes. This Jobs Applier tool exemplifies our commitment to innovation and efficiency in talent acquisition.
 
-## How UpworkScribe AI Helps
+## ✨ What This Tool Does
 
-UpworkScribe AI simplifies the freelancing process by acting as your personal assistant. It offers:
+The **Codrivity Jobs Applier** is an enterprise-grade platform that transforms how we manage job applications and candidate outreach:
 
-* **Automatic Job Scanning and Qualification:** Saves freelancers time by identifying and qualifying the most relevant job opportunities.
-* **Personalized Cover Letter:** automate the Creation of tailored cover letters for each project, increasing the chances of standing out to clients.
-* **Interview Preparation Support:** Generates materials to help freelancers prepare for client meetings and secure jobs with confidence.
-* **24/7 Availability:** can be setup to work around the clock, ensuring no opportunities are missed, even when you're offline.
-* **Cost-Effective:** Offers powerful features at a low cost, making it accessible to freelancers at all levels.
-* **Support For Multiple LLM Providers:** Can integrate with various large language models, offering flexibility and adaptability to meet different user needs.
+### 🎯 **Core Features**
+- **Smart Job Scoring**: AI-powered evaluation of job opportunities (1-10 scale)
+- **Automated Cover Letters**: Personalized, professional cover letters for high-scoring positions
+- **Interview Preparation**: AI-generated questions and talking points
+- **Multi-User Management**: Complete user isolation with admin oversight
+- **Real-Time Analytics**: Comprehensive dashboards and reporting
 
-## Features
+### 🔧 **Technical Capabilities**
+- **Streamlit Web Interface**: Modern, responsive UI
+- **OpenAI Integration**: GPT-powered content generation
+- **SQLite Database**: Secure, scalable data storage
+- **Role-Based Access**: Admin and user privilege management
+- **High-Score Notifications**: Instant alerts for premium opportunities
 
-### Jobs Scraping and Classification
+## 🚀 **Quick Start for Codrivity Team**
 
-- **Job Monitoring**: The system scans Upwork for new project listings of the freelancer provided job titles, ensuring freelancer stay up-to-date.
-- **Intelligent Job Scoring**: Each job receives a score based on various criteria such: match with freelancer experience & skills, budget, duration, client history and past projects on the platform,etc. Only jobs scoring 7/10 or higher proceed for further analysis.
+### Prerequisites
+```bash
+# Install Python dependencies
+pip install streamlit openai sqlite3 pandas plotly
 
-### AI Cover Letter and Interview Script Generation
+# Set your OpenAI API key
+export OPENAI_API_KEY="your-api-key-here"
+```
 
-- **Dynamic Cover Letter Creation**: AI agents crafts custom cover letters based on each job description and.
-- **Personalized Content**: Tailors cover letters to reflect the user’s unique writing style, skills, and relevant experiences.
-- **Interview Script and Questions**: Prepares a list of potential interview questions and a script for the freelancer, covering job-specific topics to improve interview readiness.
-- **Keyword Optimization**: Incorporates job-related keywords to enhance proposal relevance and client interest.
+### Launch the Application
+```bash
+# Start the Codrivity Jobs Applier
+streamlit run app.py
+```
+
+### Default Admin Access
+- **Username**: zaeem
+- **Email**: zaeem.codrivity@gmail.com  
+- **Password**: adminpass123
+
+## 📊 **For Codrivity Administrators**
+
+### User Management
+- Create and manage team member accounts
+- Monitor job application activity across all users
+- View system-wide analytics and performance metrics
+- Receive notifications for high-scoring opportunities (≥ 7.0)
+
+### System Oversight
+- Complete database management
+- User permission controls
+- System performance monitoring
+- Data export and reporting capabilities
+
+## 👤 **For Codrivity Team Members**
+
+### Personal Dashboard
+- Upload and manage your professional profile
+- Add job opportunities from various platforms
+- Process jobs to get AI-powered scoring
+- Generate personalized cover letters and interview prep
+- Track your application history and success rates
+
+### Workflow
+1. **Add Jobs**: Input job descriptions and requirements
+2. **AI Processing**: Get intelligent scoring based on your profile
+3. **Generate Applications**: Automated cover letters for high-scoring jobs
+4. **Interview Prep**: AI-generated questions and preparation materials
+5. **Track Progress**: Monitor your application pipeline
+
+## 🔒 **Security & Privacy**
+
+### Enterprise-Grade Security
+- **Encrypted Passwords**: PBKDF2-SHA256 with 100,000 iterations
+- **Session Management**: Secure, time-limited user sessions
+- **Data Isolation**: Complete separation of user data
+- **Admin Controls**: Comprehensive permission management
+
+### Data Protection
+- User-specific file storage (`./data/users/{user_id}/`)
+- Secure database with user isolation
+- Admin oversight without compromising privacy
+- Regular session cleanup and maintenance
+
+## 📈 **Analytics & Reporting**
+
+### Individual Metrics
+- Total jobs processed
+- Average job scores
+- Application generation rates
+- Success tracking over time
+
+### System-Wide Analytics (Admin)
+- User activity monitoring
+- High-scoring job notifications
+- Performance trends and insights
+- Export capabilities for further analysis
+
+## 🛠️ **Technical Architecture**
+
+### Technology Stack
+- **Frontend**: Streamlit (Python)
+- **AI Engine**: OpenAI GPT Models
+- **Database**: SQLite with custom schemas
+- **Visualization**: Plotly for charts and graphs
+- **Authentication**: Custom secure session management
+
+### File Structure
+```
+codrivity-jobs-applier/
+├── app.py                 # Main Streamlit application
+├── src/
+│   ├── database.py        # Database operations
+│   ├── user_job_processor.py  # User-specific processing
+│   └── utils.py           # Utility functions
+├── data/
+│   ├── cover_letter.md    # Global application archive
+│   └── users/             # User-specific data directories
+└── files/
+    └── profile.md         # User profile templates
+```
+
+## 🎯 **Codrivity Value Proposition**
+
+### For the Company
+- **Efficiency**: Automated application generation saves hours of manual work
+- **Quality**: AI-powered scoring focuses efforts on best opportunities
+- **Insights**: Analytics provide data-driven recruitment insights
+- **Scalability**: Multi-user system grows with team expansion
+
+### For Team Members
+- **Personal Branding**: Consistent, professional application materials
+- **Time Savings**: Automated cover letter and prep generation
+- **Smart Targeting**: Focus on jobs with highest success probability
+- **Skill Development**: Interview prep improves presentation skills
+
+## 🌟 **Success Metrics**
+
+Track your success with built-in analytics:
+- **Application Rate**: % of processed jobs that generate applications
+- **Score Distribution**: Quality analysis of job opportunities
+- **Response Tracking**: Monitor application success rates
+- **Time Efficiency**: Measure productivity improvements
+
+## 🤝 **Support & Development**
+
+### For Codrivity Team
+- Internal documentation and training materials
+- Regular system updates and feature enhancements
+- Technical support through company channels
+- Customization options for specific team needs
+
+### Contributing
+- Feature requests welcome from team members
+- Bug reports and improvements encouraged
+- Regular updates based on user feedback
+- Continuous optimization for Codrivity workflows
 
 ---
 
-## How It Works
+## 🎉 **Ready to Transform Your Job Search?**
 
-1. **User Input**: The process starts with the user entering a job title.
-2. **Job Scraping**: The system scrapes Upwork for job listings that match the user-provided search queries, gathering relevant opportunities in real-time.
-3. **Job Scoring and Filtering**: Each job is scored by an AI agent, and only jobs with a score of 7/10 or higher are presented to the freelancer, filtering out lower-quality matches.
-5. **Cover Letter and Interview Preparation**: For strong job matches, the system generates:
-   - A personalized cover letter emphasizing the user’s qualifications and alignment with the job.
-   - A custom interview preparation script including potential questions to prepare the user for discussions with potential clients.
-6. **Review and Submission**: The generated cover letter, interview script, and questions are saved for user review, allowing for final adjustments before submission to prospective clients.
+The **Codrivity Jobs Applier** is ready to revolutionize how our team approaches job applications and talent acquisition. 
 
-### System Flowchart
-
-This is the detailed flow of the system:
-
-[![](https://mermaid.ink/img/pako:eNqdlMGO2jAQhl_FMlJPoNJyKETtSiEBxGqL2rJ7Sjg49oRYBDuyHegKePc6TlKye1olUiJP8n_zz4xiXzCVDLCH94oUGXoOY4Hs9Ri9aFBoLYrSaPQoE_TMTQ47NBo9ID_aUqsG9FKcpTpUn_Wu5nwnmFuBVIBqGesK6ue8kl1r0Xf07fOX8RWF623g_wmjkGtKFENP8jyqFFzsuwm66MOPhg0uQQb0gFKpXLE_iaEZ6FvXM3DgLyUpaNeStp7RCgQoYsBhflHknBLDpUCBFAaE2XXhjWwzX9FiE0b2ftNW6Lpf3JMG8mSn-ATGgNp1Ncu7Zm191InDuRoXLwz6hH6XoKsi3g5t4chVtCUnQC3uhvuu2GUtrIOVC4JY1KE2r7ltFqU8z70BTdOhNkoewBtMJpNmPTpzZjLva_F3SGUulTcYj8dd3G_wdHbHp9PpR_F5gydJL_egdU-SPnjYuqe98EXrns764Mv_o-uFrxp81s-92WNNEsZYrwlseiXAQ3wEdSSc2dPmUiWMscngCDH27JIRdYhxLG5WR0ojt6-CYs-oEoZYyXKfYS8lubZRWTD744ec2CPr2Ly9_QPS1oVz?type=png)](https://mermaid.live/edit#pako:eNqdlMGO2jAQhl_FMlJPoNJyKETtSiEBxGqL2rJ7Sjg49oRYBDuyHegKePc6TlKye1olUiJP8n_zz4xiXzCVDLCH94oUGXoOY4Hs9Ri9aFBoLYrSaPQoE_TMTQ47NBo9ID_aUqsG9FKcpTpUn_Wu5nwnmFuBVIBqGesK6ue8kl1r0Xf07fOX8RWF623g_wmjkGtKFENP8jyqFFzsuwm66MOPhg0uQQb0gFKpXLE_iaEZ6FvXM3DgLyUpaNeStp7RCgQoYsBhflHknBLDpUCBFAaE2XXhjWwzX9FiE0b2ftNW6Lpf3JMG8mSn-ATGgNp1Ncu7Zm191InDuRoXLwz6hH6XoKsi3g5t4chVtCUnQC3uhvuu2GUtrIOVC4JY1KE2r7ltFqU8z70BTdOhNkoewBtMJpNmPTpzZjLva_F3SGUulTcYj8dd3G_wdHbHp9PpR_F5gydJL_egdU-SPnjYuqe98EXrns764Mv_o-uFrxp81s-92WNNEsZYrwlseiXAQ3wEdSSc2dPmUiWMscngCDH27JIRdYhxLG5WR0ojt6-CYs-oEoZYyXKfYS8lubZRWTD744ec2CPr2Ly9_QPS1oVz)
+**Get started today and experience the power of AI-driven job application management!**
 
 ---
 
-## Tech Stack
-
--   **LangGraph & LangChain**: Frameworks used for building AI agents and interacting with LLMs (GPT-4o, Llama 3, Gemini).
--   **LangSmith**: For monitoring the different LLM calls and AI agents' interactions.
--   **Playwright**: For scraping and crawling websites.
-
----
-
-## How to Run
-
-### Setup
-
-1. **Clone the repository:**
-
-   ```sh
-   git clone https://github.com/kaymen99/Upwork-AI-jobs-applier.git
-   cd Upwork-AI-jobs-applier
-   ```
-
-2. **Set up environment variables:**
-
-   Create a `.env` file in the root directory of the project and add your API keys, see `.env.example` to know all the parameters you will need.
-
-### Run Locally
-
-#### Prerequisites
-
-- Python 3.9+
-- Necessary Python libraries (listed in `requirements.txt`)
-- API keys for LLM models you want to use (OpenAI, Claude, Gemini, Groq,...)
-
-#### Running the Application
-
-1. **Create and activate a virtual environment:**
-
-   ```sh
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-
-2. **Install the required packages:**
-
-   ```sh
-   pip install -r requirements.txt
-   playwright install firefox
-   ```
-
-3. **Start the workflow:**
-
-   ```sh
-   python main.py
-   ```
-
-   The application will start scraping job listings, classifying them, generating cover letters, and saving the results. By default, all the generated cover letters will be saved in the `data/cover_letter.txt` file alongside a csv file including all the jobs details.
-
-4. **Test the Upwork jobs scraping tool** by running:
-
-   ```sh
-   python scrape_upwork_jobs.py
-   ```
-
----
-
-### Run in Docker
-
-#### Prerequisites
-
-- Docker installed on your machine.
-- API keys for LLM models you want to use (OpenAI, Claude, Gemini, Groq,...)
-
-#### Running the Application
-
-1. **Build and run the Docker container:**
-
-   ```sh
-   docker build -t upwork-auto-jobs-applier-using-ai .
-   docker run -e OPENAI_API_KEY=YOUR_API_KEY_HERE -v ./data:/usr/src/app/data upwork-auto-jobs-applier-using-ai
-   ```
-
-   The application will start scraping job listings, classifying them, generating cover letters, and saving the results. By default, all the generated cover letters will be saved in the `data/cover_letters.txt` file.
-
-2. **Test the Upwork jobs scraping tool** in Docker by running:
-
-   ```sh
-   docker run -e OPENAI_API_KEY=YOUR_API_KEY_HERE -v ./data:/usr/src/app/data upwork-auto-jobs-applier-using-ai python scrape_upwork_jobs.py
-   ```
-
----
-
-### Customization
-
-- To use this automation for your own profile, just add your profile into `files/profile.md` and remove the example profile.
-
-- You can customize the behavior of each AI agent by modifying the corresponding agent prompt in the `prompts` script.
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any changes.
-
-## Contact
-
-If you have any questions or suggestions, feel free to contact me at `aymenMir1001@gmail.com`.
+*Built with ❤️ for the Codrivity team • Powered by OpenAI • Streamlit • Python*
