@@ -1,178 +1,173 @@
-# 🚀 Codrivity Jobs Applier
+# 🤖 Upwork AI Jobs Applier
 
-> **AI-Powered Job Application Management System**  
-> *Empowering Codrivity's talent acquisition with intelligent automation*
+An intelligent Streamlit application that automates job searching and application processes on Upwork using AI-powered matching and personalized cover letter generation.
 
-## 🏢 About Codrivity
+## ✨ Features
 
-**Codrivity** is a forward-thinking technology company that leverages cutting-edge solutions to streamline business processes. This Jobs Applier tool exemplifies our commitment to innovation and efficiency in talent acquisition.
+### 🔐 Authentication System
+- **Multi-user support** with secure password hashing (PBKDF2-SHA256)
+- **Session management** with automatic cleanup
+- **Admin panel** for system management
+- **User isolation** - each user has their own applications and data
 
-## ✨ What This Tool Does
+### 🎯 AI-Powered Job Processing
+- **Intelligent job scoring** based on your skills and preferences
+- **Automated cover letter generation** using AI
+- **User-specific applications** saved to individual directories
+- **High-score job notifications** (≥7.0) for promising opportunities
 
-The **Codrivity Jobs Applier** is an enterprise-grade platform that transforms how we manage job applications and candidate outreach:
+### 👨‍💼 Admin Features
+- **System Overview** with user statistics and analytics
+- **User Management** - create, modify, promote/demote users
+- **Job Management** - view all applications across users
+- **System Tools** - database maintenance and cleanup
+- **Analytics Dashboard** with comprehensive metrics
 
-### 🎯 **Core Features**
-- **Smart Job Scoring**: AI-powered evaluation of job opportunities (1-10 scale)
-- **Automated Cover Letters**: Personalized, professional cover letters for high-scoring positions
-- **Interview Preparation**: AI-generated questions and talking points
-- **Multi-User Management**: Complete user isolation with admin oversight
-- **Real-Time Analytics**: Comprehensive dashboards and reporting
+### 📊 Smart Analytics
+- Job processing statistics
+- Success rate tracking
+- User activity monitoring
+- High-score job alerts
 
-### 🔧 **Technical Capabilities**
-- **Streamlit Web Interface**: Modern, responsive UI
-- **OpenAI Integration**: GPT-powered content generation
-- **SQLite Database**: Secure, scalable data storage
-- **Role-Based Access**: Admin and user privilege management
-- **High-Score Notifications**: Instant alerts for premium opportunities
-
-## 🚀 **Quick Start for Codrivity Team**
+## 🚀 Installation
 
 ### Prerequisites
+- Python 3.8+
+- pip package manager
+
+### Setup
+1. **Clone the repository**
 ```bash
-# Install Python dependencies
-pip install streamlit openai sqlite3 pandas plotly
-
-# Set your OpenAI API key
-export OPENAI_API_KEY="your-api-key-here"
+git clone https://github.com/YOUR-USERNAME/upwork-ai-jobs-applier.git
+cd upwork-ai-jobs-applier
 ```
 
-### Launch the Application
+2. **Install dependencies**
 ```bash
-# Start the Codrivity Jobs Applier
-streamlit run app.py
+pip install -r requirements.txt
 ```
 
-### Default Admin Access
-- **Username**: zaeem
-- **Email**: zaeem.codrivity@gmail.com  
-- **Password**: adminpass123
+3. **Configure the application**
+   - Update API keys in your configuration files
+   - Modify job search criteria in the settings
 
-## 📊 **For Codrivity Administrators**
-
-### User Management
-- Create and manage team member accounts
-- Monitor job application activity across all users
-- View system-wide analytics and performance metrics
-- Receive notifications for high-scoring opportunities (≥ 7.0)
-
-### System Oversight
-- Complete database management
-- User permission controls
-- System performance monitoring
-- Data export and reporting capabilities
-
-## 👤 **For Codrivity Team Members**
-
-### Personal Dashboard
-- Upload and manage your professional profile
-- Add job opportunities from various platforms
-- Process jobs to get AI-powered scoring
-- Generate personalized cover letters and interview prep
-- Track your application history and success rates
-
-### Workflow
-1. **Add Jobs**: Input job descriptions and requirements
-2. **AI Processing**: Get intelligent scoring based on your profile
-3. **Generate Applications**: Automated cover letters for high-scoring jobs
-4. **Interview Prep**: AI-generated questions and preparation materials
-5. **Track Progress**: Monitor your application pipeline
-
-## 🔒 **Security & Privacy**
-
-### Enterprise-Grade Security
-- **Encrypted Passwords**: PBKDF2-SHA256 with 100,000 iterations
-- **Session Management**: Secure, time-limited user sessions
-- **Data Isolation**: Complete separation of user data
-- **Admin Controls**: Comprehensive permission management
-
-### Data Protection
-- User-specific file storage (`./data/users/{user_id}/`)
-- Secure database with user isolation
-- Admin oversight without compromising privacy
-- Regular session cleanup and maintenance
-
-## 📈 **Analytics & Reporting**
-
-### Individual Metrics
-- Total jobs processed
-- Average job scores
-- Application generation rates
-- Success tracking over time
-
-### System-Wide Analytics (Admin)
-- User activity monitoring
-- High-scoring job notifications
-- Performance trends and insights
-- Export capabilities for further analysis
-
-## 🛠️ **Technical Architecture**
-
-### Technology Stack
-- **Frontend**: Streamlit (Python)
-- **AI Engine**: OpenAI GPT Models
-- **Database**: SQLite with custom schemas
-- **Visualization**: Plotly for charts and graphs
-- **Authentication**: Custom secure session management
-
-### File Structure
+4. **Initialize the database**
+```bash
+python src/database.py
 ```
-codrivity-jobs-applier/
-├── app.py                 # Main Streamlit application
+
+5. **Create an admin user** (optional)
+```bash
+python quick_create_admin.py
+```
+
+## 🖥️ Usage
+
+### Starting the Application
+```bash
+python -m streamlit run app.py
+```
+
+Access the application at `http://localhost:8501`
+
+### For Regular Users
+1. **Sign Up** - Create your account with email and password
+2. **Profile Setup** - Configure your skills, preferences, and job criteria
+3. **Process Jobs** - Run the job search and let AI score opportunities
+4. **Review Applications** - Check generated cover letters and applications
+5. **Apply** - Use the generated content to apply for jobs
+
+### For Admin Users
+1. **Access Admin Panel** - Additional tab available after login
+2. **Manage Users** - Create, edit, activate/deactivate user accounts
+3. **System Overview** - Monitor application performance and usage
+4. **Job Analytics** - View success rates and job processing statistics
+5. **System Maintenance** - Database cleanup and system tools
+
+## 📁 Project Structure
+
+```
+upwork-ai-jobs-applier/
+├── app.py                          # Main Streamlit application
 ├── src/
-│   ├── database.py        # Database operations
-│   ├── user_job_processor.py  # User-specific processing
-│   └── utils.py           # Utility functions
+│   ├── database.py                 # Database management and schema
+│   ├── job_processor.py            # Core job processing logic
+│   ├── user_job_processor.py       # User-specific job processing
+│   ├── manual_job_processor.py     # Manual job processing utilities
+│   └── utils.py                    # Helper functions
 ├── data/
-│   ├── cover_letter.md    # Global application archive
-│   └── users/             # User-specific data directories
-└── files/
-    └── profile.md         # User profile templates
+│   ├── users/                      # User-specific data directories
+│   ├── applications/               # Generated applications
+│   └── high_score_notifications.json # High-score job alerts
+├── .streamlit/
+│   └── config.toml                 # Streamlit configuration
+├── docs/
+│   ├── AUTHENTICATION_README.md    # Authentication system documentation
+│   ├── ADMIN_SETUP.md             # Admin setup and usage guide
+│   └── APPLICATIONS_PAGE_FIXES.md  # Technical fixes documentation
+└── requirements.txt                # Python dependencies
 ```
 
-## 🎯 **Codrivity Value Proposition**
+## 🔧 Configuration
 
-### For the Company
-- **Efficiency**: Automated application generation saves hours of manual work
-- **Quality**: AI-powered scoring focuses efforts on best opportunities
-- **Insights**: Analytics provide data-driven recruitment insights
-- **Scalability**: Multi-user system grows with team expansion
+### Environment Variables
+Create a `.env` file with your API keys and configuration:
 
-### For Team Members
-- **Personal Branding**: Consistent, professional application materials
-- **Time Savings**: Automated cover letter and prep generation
-- **Smart Targeting**: Focus on jobs with highest success probability
-- **Skill Development**: Interview prep improves presentation skills
+```env
+# Add your API keys here
+OPENAI_API_KEY=your_openai_key_here
+# Add other configuration variables as needed
+```
 
-## 🌟 **Success Metrics**
+### Job Search Criteria
+Modify the job search parameters in the application settings to match your:
+- Skills and expertise
+- Desired job categories
+- Budget preferences
+- Experience level
 
-Track your success with built-in analytics:
-- **Application Rate**: % of processed jobs that generate applications
-- **Score Distribution**: Quality analysis of job opportunities
-- **Response Tracking**: Monitor application success rates
-- **Time Efficiency**: Measure productivity improvements
+## 🛡️ Security Features
 
-## 🤝 **Support & Development**
+- **Password Security**: PBKDF2-SHA256 hashing with 100,000 iterations
+- **Session Management**: Secure session tokens with automatic expiration
+- **User Isolation**: Complete separation of user data and applications
+- **Admin Controls**: Granular permissions and system management tools
+- **Data Protection**: Sensitive files excluded from version control
 
-### For Codrivity Team
-- Internal documentation and training materials
-- Regular system updates and feature enhancements
-- Technical support through company channels
-- Customization options for specific team needs
+## 📊 Database Schema
 
-### Contributing
-- Feature requests welcome from team members
-- Bug reports and improvements encouraged
-- Regular updates based on user feedback
-- Continuous optimization for Codrivity workflows
+The application uses SQLite with the following main tables:
+- `users` - User accounts and authentication
+- `user_sessions` - Active user sessions
+- `jobs` - Job listings and processing results
+- Admin functions for user and system management
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+1. Check the documentation in the `docs/` directory
+2. Review the issue tracker for common problems
+3. Create a new issue for bugs or feature requests
+
+## 🔄 Version History
+
+- **v1.0.0** - Initial release with basic job processing
+- **v2.0.0** - Added multi-user authentication system
+- **v2.1.0** - Implemented admin panel and user management
+- **v2.2.0** - Added high-score notifications and enhanced analytics
 
 ---
 
-## 🎉 **Ready to Transform Your Job Search?**
-
-The **Codrivity Jobs Applier** is ready to revolutionize how our team approaches job applications and talent acquisition. 
-
-**Get started today and experience the power of AI-driven job application management!**
-
----
-
-*Built with ❤️ for the Codrivity team • Powered by OpenAI • Streamlit • Python*
+**⚠️ Disclaimer**: This tool is for educational purposes. Always review generated content before submitting job applications and ensure compliance with Upwork's terms of service.
