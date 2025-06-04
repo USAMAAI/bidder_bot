@@ -15,7 +15,7 @@ from .structured_outputs import (
     CallScript,
     JobApplication
 )
-from .database import ensure_db_exists, save_jobs
+from .database import ensure_db_exists, save_jobs, get_prompt_by_type
 from .state import *
 from .prompts import *
 
@@ -231,9 +231,19 @@ class CreateJobApplicationNodes:
         @return: Updated state with generated cover letter.
         """
         print(Fore.YELLOW + "----- Generating Cover Letter -----\n" + Style.RESET_ALL)
-        cover_letter_prompt = GENERATE_COVER_LETTER_PROMPT.format(
-            profile=state["relevant_infos"]
-        )
+        
+        # Get custom prompt from database or fallback to default
+        custom_prompt = get_prompt_by_type("cover_letter")
+        if custom_prompt:
+            cover_letter_prompt = custom_prompt['prompt_content'].format(
+                profile=state["relevant_infos"]
+            )
+        else:
+            # Fallback to default prompt from prompts.py
+            cover_letter_prompt = GENERATE_COVER_LETTER_PROMPT.format(
+                profile=state["relevant_infos"]
+            )
+        
         result = await ainvoke_llm(
             system_prompt=cover_letter_prompt,
             user_message=f"Write a cover letter for the job described below:\n\n{state['job_description']}",
@@ -247,7 +257,19 @@ class CreateJobApplicationNodes:
         Generate the job interview preparation script based on job description and profile.
         """
         print(Fore.YELLOW + "----- Generating Interview Preparation -----\n" + Style.RESET_ALL)
-        interview_preparation_prompt = GENERATE_INTERVIEW_PREPARATION_PROMPT.format(profile=state["relevant_infos"])
+        
+        # Get custom prompt from database or fallback to default
+        custom_prompt = get_prompt_by_type("interview_prep")
+        if custom_prompt:
+            interview_preparation_prompt = custom_prompt['prompt_content'].format(
+                profile=state["relevant_infos"]
+            )
+        else:
+            # Fallback to default prompt from prompts.py
+            interview_preparation_prompt = GENERATE_INTERVIEW_PREPARATION_PROMPT.format(
+                profile=state["relevant_infos"]
+            )
+        
         result = await ainvoke_llm(
             system_prompt=interview_preparation_prompt,
             user_message=f"Create preparation for the job described below:\n\n{state['job_description']}",

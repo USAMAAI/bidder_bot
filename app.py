@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Codrivity Jobs Applier - Streamlit Web Application
+Upwork AI Jobs Applier - Streamlit Web Application
 
 A comprehensive web interface for managing job applications with AI-powered
-cover letter generation and job scoring. Powered by Codrivity.
+cover letter generation and job scoring.
 """
 
 import streamlit as st
@@ -18,21 +18,46 @@ import os
 
 # Import existing modules
 from src.database import (
-    ensure_db_exists, get_all_jobs, save_job, get_job_by_id, 
-    update_job, delete_job, delete_multiple_jobs, reset_job_score, 
-    reset_multiple_job_scores, get_jobs_by_criteria, get_database_stats,
-    create_user, authenticate_user, create_session, validate_session,
-    invalidate_session, cleanup_expired_sessions, get_user_by_id,
-    is_admin_user, get_all_users, get_all_jobs_admin, get_system_stats,
-    delete_user_admin, toggle_user_status, promote_user_to_admin, demote_admin_user
+    ensure_db_exists, 
+    get_all_jobs, 
+    get_jobs_by_criteria,
+    get_job_by_id,
+    save_job,
+    update_job,
+    delete_job,
+    delete_multiple_jobs,
+    reset_job_score,
+    reset_multiple_job_scores,
+    get_database_stats,
+    create_user,
+    authenticate_user,
+    create_session,
+    validate_session,
+    invalidate_session,
+    update_last_login,
+    get_user_by_id,
+    cleanup_expired_sessions,
+    is_admin_user,
+    get_all_users,
+    get_all_jobs_admin,
+    get_system_stats,
+    delete_user_admin,
+    toggle_user_status,
+    promote_user_to_admin,
+    demote_admin_user,
+    get_prompt_by_type,
+    get_all_prompts,
+    create_or_update_prompt,
+    delete_prompt,
+    initialize_default_prompts
 )
 from src.utils import read_text_file
 from src.user_job_processor import UserJobProcessor
 
 # Page configuration
 st.set_page_config(
-    page_title="Codrivity Jobs Applier",
-    page_icon="🚀",
+    page_title="Upwork AI Jobs Applier",
+    page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -45,13 +70,6 @@ st.markdown("""
         color: #1f77b4;
         text-align: center;
         margin-bottom: 2rem;
-    }
-    .codrivity-brand {
-        font-size: 1.2rem;
-        color: #4CAF50;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 1rem;
     }
     .metric-card {
         background-color: #f0f2f6;
@@ -77,14 +95,6 @@ st.markdown("""
     .error-message {
         color: #dc3545;
         font-weight: bold;
-    }
-    .codrivity-footer {
-        text-align: center;
-        color: #666;
-        font-size: 0.9rem;
-        margin-top: 2rem;
-        padding: 1rem;
-        border-top: 1px solid #eee;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -139,8 +149,7 @@ def check_authentication():
 
 def login_page():
     """Display login page."""
-    st.markdown('<h1 class="main-header">🔐 Welcome to Codrivity Jobs Applier</h1>', unsafe_allow_html=True)
-    st.markdown('<div class="codrivity-brand">🚀 Powered by Codrivity Innovation</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🔐 Welcome to Upwork AI Jobs Applier</h1>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
     
@@ -175,14 +184,14 @@ def login_page():
                                 st.session_state.user = user_data
                                 st.session_state.session_id = session_id
                                 
-                                st.success(f"Welcome back to Codrivity, {user_data['username']}!")
+                                st.success(f"Welcome back, {user_data['username']}!")
                                 st.rerun()
                             else:
                                 st.error(message)
         
         with tab2:
             with st.form("signup_form"):
-                st.subheader("Join the Codrivity Team")
+                st.subheader("Create New Account")
                 
                 new_username = st.text_input("Username", placeholder="Choose a username")
                 new_email = st.text_input("Email", placeholder="Enter your email address")
@@ -192,7 +201,7 @@ def login_page():
                 # Password requirements
                 st.caption("Password must be at least 8 characters long")
                 
-                signup_button = st.form_submit_button("📝 Join Codrivity", type="primary")
+                signup_button = st.form_submit_button("📝 Create Account", type="primary")
                 
                 if signup_button:
                     # Validation
@@ -214,11 +223,11 @@ def login_page():
                         for error in errors:
                             st.error(error)
                     else:
-                        with st.spinner("Creating your Codrivity account..."):
+                        with st.spinner("Creating account..."):
                             success, result = create_user(new_username, new_email, new_password)
                             
                             if success:
-                                st.success("Welcome to the Codrivity team! Please login with your credentials.")
+                                st.success("Account created successfully! Please login with your credentials.")
                                 # Clear form
                                 st.session_state.show_signup = False
                             else:
@@ -227,29 +236,15 @@ def login_page():
         # App info
         st.divider()
         st.markdown("""
-        ### 🚀 About Codrivity Jobs Applier
-        **Codrivity Jobs Applier** helps you:
-        - 📋 Manage job opportunities from various platforms
+        ### 🤖 About This App
+        **Upwork AI Jobs Applier** helps you:
+        - 📋 Manage job opportunities from Upwork
         - ⚡ AI-powered job scoring based on your profile
         - ✉️ Generate personalized cover letters
         - 🎤 Prepare for interviews with AI assistance
         
         **Secure & Private**: Your data is encrypted and stored securely.
-        **Enterprise-Grade**: Built for Codrivity's professional team.
         """)
-    
-    # Add Codrivity footer
-    add_codrivity_footer()
-
-def add_codrivity_footer():
-    """Add Codrivity branded footer to pages."""
-    st.markdown("""
-    <div class="codrivity-footer">
-        <strong>🚀 Codrivity Jobs Applier</strong><br>
-        Empowering talent acquisition through AI innovation<br>
-        <em>Built with ❤️ for the Codrivity team</em>
-    </div>
-    """, unsafe_allow_html=True)
 
 def logout():
     """Handle user logout."""
@@ -510,8 +505,7 @@ def process_jobs_async(min_score: int, batch_size: int):
 
 def dashboard_page():
     """Main dashboard page."""
-    st.markdown('<h1 class="main-header">🚀 Codrivity Jobs Applier Dashboard</h1>', unsafe_allow_html=True)
-    st.markdown('<div class="codrivity-brand">Welcome to your personalized workspace</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🤖 Upwork AI Jobs Applier Dashboard</h1>', unsafe_allow_html=True)
     
     # User welcome message
     if st.session_state.user:
@@ -522,7 +516,6 @@ def dashboard_page():
     
     if df.empty:
         st.warning("No jobs found in database. Add some jobs to get started!")
-        add_codrivity_footer()
         return
     
     # Metrics row
@@ -663,9 +656,6 @@ def dashboard_page():
                     st.write("**Jobs by Type:**")
                     for job_type, count in stats['jobs_by_type'].items():
                         st.write(f"- {job_type}: {count}")
-    
-    # Add Codrivity footer
-    add_codrivity_footer()
 
 def add_job_page():
     """Add new job page."""
@@ -1645,37 +1635,40 @@ def is_current_user_admin():
     return st.session_state.user.get('is_admin', False)
 
 def admin_panel_page():
-    """Admin panel page for system management."""
+    """Main admin panel with tabs for different admin functions."""
     if not is_current_user_admin():
-        st.error("🚫 Access Denied - Admin privileges required")
+        st.error("⛔ Access denied. Admin privileges required.")
         return
     
-    st.header("👑 Codrivity Admin Panel")
-    st.markdown('<div class="codrivity-brand">Enterprise System Management</div>', unsafe_allow_html=True)
-    st.markdown(f"Welcome, **{st.session_state.user['username']}** - System Administrator")
+    st.title("👑 Admin Panel")
+    st.markdown("---")
     
-    # Admin tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "📊 System Overview", 
+    # Admin navigation tabs
+    tab_options = [
+        "📊 System Overview",
         "👥 User Management", 
-        "💼 All Jobs", 
+        "💼 Jobs Management",
+        "📝 Prompt Management",
         "🔧 System Tools",
         "📈 Analytics"
-    ])
+    ]
     
-    with tab1:
+    selected_tab = st.selectbox("Admin Section:", tab_options, key="admin_nav_tabs")
+    
+    st.markdown("---")
+    
+    # Route to appropriate admin function
+    if selected_tab == "📊 System Overview":
         admin_system_overview()
-    
-    with tab2:
+    elif selected_tab == "👥 User Management":
         admin_user_management()
-    
-    with tab3:
+    elif selected_tab == "💼 Jobs Management":
         admin_jobs_management()
-    
-    with tab4:
+    elif selected_tab == "📝 Prompt Management":
+        admin_prompt_management()
+    elif selected_tab == "🔧 System Tools":
         admin_system_tools()
-    
-    with tab5:
+    elif selected_tab == "📈 Analytics":
         admin_analytics()
 
 def admin_system_overview():
@@ -2022,6 +2015,184 @@ def admin_analytics():
                                    columns=['Username', 'Job Count'])
         st.dataframe(top_users_df, use_container_width=True)
 
+def admin_prompt_management():
+    """Prompt management for admins."""
+    st.subheader("📝 Prompt Management")
+    
+    admin_user_id = get_current_user_id()
+    
+    # Initialize default prompts if none exist
+    if st.button("🔄 Initialize Default Prompts", key="init_default_prompts"):
+        success, message = initialize_default_prompts(admin_user_id)
+        if success:
+            st.success(message)
+        else:
+            st.error(message)
+        st.rerun()
+    
+    # Get all existing prompts
+    prompts = get_all_prompts(admin_user_id)
+    
+    # Display current prompts
+    if prompts:
+        st.subheader("📋 Current Prompts")
+        
+        for prompt in prompts:
+            with st.expander(f"{prompt['prompt_name']} ({prompt['prompt_type']})"):
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    st.text_area(
+                        "Preview:", 
+                        value=prompt['prompt_content'][:300] + "..." if len(prompt['prompt_content']) > 300 else prompt['prompt_content'],
+                        height=100,
+                        disabled=True,
+                        key=f"preview_{prompt['prompt_type']}"
+                    )
+                    st.caption(f"Created: {prompt['created_at']} | Updated: {prompt['updated_at']}")
+                    if prompt.get('created_by_username'):
+                        st.caption(f"By: {prompt['created_by_username']}")
+                
+                with col2:
+                    if st.button("✏️ Edit", key=f"edit_{prompt['prompt_type']}"):
+                        st.session_state[f"editing_{prompt['prompt_type']}"] = True
+                        st.rerun()
+                    
+                    if st.button("🗑️ Delete", key=f"delete_{prompt['prompt_type']}", type="secondary"):
+                        success, message = delete_prompt(prompt['prompt_type'], admin_user_id)
+                        if success:
+                            st.success(message)
+                        else:
+                            st.error(message)
+                        st.rerun()
+    
+    st.divider()
+    
+    # Add/Edit prompt form
+    st.subheader("➕ Add/Edit Prompt")
+    
+    # Check if we're editing an existing prompt
+    editing_prompt = None
+    for prompt in prompts:
+        if st.session_state.get(f"editing_{prompt['prompt_type']}", False):
+            editing_prompt = prompt
+            break
+    
+    with st.form("prompt_form"):
+        if editing_prompt:
+            st.info(f"Editing: {editing_prompt['prompt_name']}")
+            prompt_type = st.selectbox(
+                "Prompt Type:",
+                ["cover_letter", "interview_prep"],
+                index=0 if editing_prompt['prompt_type'] == 'cover_letter' else 1,
+                disabled=True  # Don't allow changing type when editing
+            )
+            prompt_name = st.text_input(
+                "Prompt Name:",
+                value=editing_prompt['prompt_name']
+            )
+            prompt_content = st.text_area(
+                "Prompt Content:",
+                value=editing_prompt['prompt_content'],
+                height=400,
+                help="Use {profile} as a placeholder for the freelancer profile information."
+            )
+        else:
+            prompt_type = st.selectbox(
+                "Prompt Type:",
+                ["cover_letter", "interview_prep"],
+                help="Select the type of prompt you want to create/update"
+            )
+            prompt_name = st.text_input(
+                "Prompt Name:",
+                placeholder="e.g., Professional Cover Letter Template"
+            )
+            prompt_content = st.text_area(
+                "Prompt Content:",
+                height=400,
+                placeholder="Enter your prompt template here...",
+                help="Use {profile} as a placeholder for the freelancer profile information."
+            )
+        
+        # Form buttons
+        col1, col2, col3 = st.columns([2, 2, 1])
+        
+        with col1:
+            submit_button = st.form_submit_button(
+                "💾 Save Prompt" if not editing_prompt else "💾 Update Prompt",
+                type="primary"
+            )
+        
+        with col2:
+            if editing_prompt and st.form_submit_button("❌ Cancel Edit"):
+                for key in list(st.session_state.keys()):
+                    if key.startswith("editing_"):
+                        del st.session_state[key]
+                st.rerun()
+        
+        with col3:
+            if st.form_submit_button("📖 Help"):
+                st.session_state.show_prompt_help = True
+    
+    # Handle form submission
+    if submit_button and prompt_name and prompt_content:
+        success, message = create_or_update_prompt(
+            prompt_type, 
+            prompt_name, 
+            prompt_content, 
+            admin_user_id
+        )
+        
+        if success:
+            st.success(message)
+            # Clear editing state
+            for key in list(st.session_state.keys()):
+                if key.startswith("editing_"):
+                    del st.session_state[key]
+            st.rerun()
+        else:
+            st.error(message)
+    
+    # Show help if requested
+    if st.session_state.get('show_prompt_help', False):
+        with st.expander("📖 Prompt Help & Examples", expanded=True):
+            st.markdown("""
+            ### How to Create Effective Prompts
+            
+            **Available Placeholders:**
+            - `{profile}` - Will be replaced with the freelancer's profile information
+            
+            **Cover Letter Prompt Tips:**
+            - Include clear instructions for tone and style
+            - Specify word count limits
+            - Provide example format or structure
+            - Include any specific requirements (like name inclusion)
+            
+            **Interview Preparation Prompt Tips:**
+            - Ask for structured output (introduction, key points, questions)
+            - Specify number of questions to generate
+            - Include both client questions and questions to ask the client
+            - Request professional tone guidelines
+            
+            **Example Cover Letter Prompt Structure:**
+            ```
+            You are a professional cover letter writer. Create a personalized cover letter.
+            
+            Freelancer Profile:
+            {profile}
+            
+            Instructions:
+            1. Keep it under 150 words
+            2. Use friendly, professional tone
+            3. Include specific examples from the profile
+            4. Address the job requirements directly
+            ```
+            """)
+            
+            if st.button("❌ Close Help"):
+                st.session_state.show_prompt_help = False
+                st.rerun()
+
 def main():
     """Main application."""
     init_session_state()
@@ -2046,8 +2217,7 @@ def main():
     
     # Sidebar navigation for authenticated users
     with st.sidebar:
-        st.title("🚀 Codrivity Jobs")
-        st.caption("AI-Powered Talent Acquisition")
+        st.title("🤖 Jobs Applier")
         
         # User info
         if st.session_state.user:

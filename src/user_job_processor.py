@@ -16,7 +16,14 @@ from typing import List, Dict, Any, Optional
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.database import get_jobs_by_criteria, update_job, get_user_by_id
+from src.database import (
+    get_all_jobs,
+    get_job_by_id,
+    update_job,
+    get_jobs_by_criteria,
+    cleanup_expired_sessions,
+    get_prompt_by_type
+)
 from process_manual_jobs import ManualJobProcessor
 import openai
 
@@ -133,20 +140,28 @@ class UserJobProcessor(ManualJobProcessor):
         
         for job in jobs:
             try:
-                # Generate cover letter
-                cover_letter_prompt = f"""
-                Write a personalized cover letter for this job application.
-                
-                Freelancer Profile:
-                {self.profile}
-                
-                Job Details:
-                Title: {job.get('title', 'N/A')}
-                Description: {job.get('description', 'N/A')}
-                Requirements: {job.get('proposal_requirements', 'N/A')}
-                
-                Write a professional, engaging cover letter that highlights relevant experience and addresses the job requirements. Keep it concise (2-3 paragraphs).
-                """
+                # Get custom cover letter prompt from database or use fallback
+                custom_cover_prompt = get_prompt_by_type("cover_letter")
+                if custom_cover_prompt:
+                    # Use the stored prompt template with job-specific formatting
+                    cover_letter_prompt = custom_cover_prompt['prompt_content'].format(
+                        profile=self.profile
+                    ) + f"\n\nJob Details:\nTitle: {job.get('title', 'N/A')}\nDescription: {job.get('description', 'N/A')}\nRequirements: {job.get('proposal_requirements', 'N/A')}"
+                else:
+                    # Fallback to simple prompt
+                    cover_letter_prompt = f"""
+                    Write a personalized cover letter for this job application.
+                    
+                    Freelancer Profile:
+                    {self.profile}
+                    
+                    Job Details:
+                    Title: {job.get('title', 'N/A')}
+                    Description: {job.get('description', 'N/A')}
+                    Requirements: {job.get('proposal_requirements', 'N/A')}
+                    
+                    Write a professional, engaging cover letter that highlights relevant experience and addresses the job requirements. Keep it concise (2-3 paragraphs).
+                    """
                 
                 cover_response = await asyncio.to_thread(
                     self.client.chat.completions.create,
@@ -157,15 +172,23 @@ class UserJobProcessor(ManualJobProcessor):
                 
                 cover_letter = cover_response.choices[0].message.content.strip()
                 
-                # Generate interview preparation
-                interview_prompt = f"""
-                Prepare potential interview questions and answers for this job.
-                
-                Job Title: {job.get('title', 'N/A')}
-                Job Description: {job.get('description', 'N/A')[:300]}...
-                
-                Provide 3-5 likely interview questions with suggested answers based on the freelancer profile.
-                """
+                # Get custom interview prep prompt from database or use fallback
+                custom_interview_prompt = get_prompt_by_type("interview_prep")
+                if custom_interview_prompt:
+                    # Use the stored prompt template with job-specific formatting
+                    interview_prompt = custom_interview_prompt['prompt_content'].format(
+                        profile=self.profile
+                    ) + f"\n\nJob Details:\nTitle: {job.get('title', 'N/A')}\nDescription: {job.get('description', 'N/A')[:300]}..."
+                else:
+                    # Fallback to simple prompt
+                    interview_prompt = f"""
+                    Prepare potential interview questions and answers for this job.
+                    
+                    Job Title: {job.get('title', 'N/A')}
+                    Job Description: {job.get('description', 'N/A')[:300]}...
+                    
+                    Provide 3-5 likely interview questions with suggested answers based on the freelancer profile.
+                    """
                 
                 interview_response = await asyncio.to_thread(
                     self.client.chat.completions.create,

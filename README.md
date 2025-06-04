@@ -1,173 +1,155 @@
-# 🤖 Upwork AI Jobs Applier
+# UpworkScribe AI: Automated Jobs Application on Upwork
 
-An intelligent Streamlit application that automates job searching and application processes on Upwork using AI-powered matching and personalized cover letter generation.
+**UpworkScribe AI is not just a tool; it's your partner in navigating the competitive world of freelancing, helping you secure more projects and grow your freelance career. 🚀**
 
-## ✨ Features
+## The Challenge of Modern Freelancing
 
-### 🔐 Authentication System
-- **Multi-user support** with secure password hashing (PBKDF2-SHA256)
-- **Session management** with automatic cleanup
-- **Admin panel** for system management
-- **User isolation** - each user has their own applications and data
+The freelance marketplace has undergone a dramatic transformation in the digital age. While platforms like Upwork have opened up a world of opportunities, they have also intensified competition. Freelancers often find themselves spending countless hours searching for suitable projects, tailoring proposals, and crafting unique cover letters. This process can be not only time-consuming but also mentally exhausting, leading to missed opportunities and proposal fatigue.
 
-### 🎯 AI-Powered Job Processing
-- **Intelligent job scoring** based on your skills and preferences
-- **Automated cover letter generation** using AI
-- **User-specific applications** saved to individual directories
-- **High-score job notifications** (≥7.0) for promising opportunities
+## How UpworkScribe AI Helps
 
-### 👨‍💼 Admin Features
-- **System Overview** with user statistics and analytics
-- **User Management** - create, modify, promote/demote users
-- **Job Management** - view all applications across users
-- **System Tools** - database maintenance and cleanup
-- **Analytics Dashboard** with comprehensive metrics
+UpworkScribe AI simplifies the freelancing process by acting as your personal assistant. It offers:
 
-### 📊 Smart Analytics
-- Job processing statistics
-- Success rate tracking
-- User activity monitoring
-- High-score job alerts
+* **Automatic Job Scanning and Qualification:** Saves freelancers time by identifying and qualifying the most relevant job opportunities.
+* **Personalized Cover Letter:** automate the Creation of tailored cover letters for each project, increasing the chances of standing out to clients.
+* **Interview Preparation Support:** Generates materials to help freelancers prepare for client meetings and secure jobs with confidence.
+* **24/7 Availability:** can be setup to work around the clock, ensuring no opportunities are missed, even when you're offline.
+* **Cost-Effective:** Offers powerful features at a low cost, making it accessible to freelancers at all levels.
+* **Support For Multiple LLM Providers:** Can integrate with various large language models, offering flexibility and adaptability to meet different user needs.
 
-## 🚀 Installation
+## Features
 
-### Prerequisites
-- Python 3.8+
-- pip package manager
+### Jobs Scraping and Classification
 
-### Setup
-1. **Clone the repository**
-```bash
-git clone https://github.com/YOUR-USERNAME/upwork-ai-jobs-applier.git
-cd upwork-ai-jobs-applier
-```
+- **Job Monitoring**: The system scans Upwork for new project listings of the freelancer provided job titles, ensuring freelancer stay up-to-date.
+- **Intelligent Job Scoring**: Each job receives a score based on various criteria such: match with freelancer experience & skills, budget, duration, client history and past projects on the platform,etc. Only jobs scoring 7/10 or higher proceed for further analysis.
 
-2. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
+### AI Cover Letter and Interview Script Generation
 
-3. **Configure the application**
-   - Update API keys in your configuration files
-   - Modify job search criteria in the settings
-
-4. **Initialize the database**
-```bash
-python src/database.py
-```
-
-5. **Create an admin user** (optional)
-```bash
-python quick_create_admin.py
-```
-
-## 🖥️ Usage
-
-### Starting the Application
-```bash
-python -m streamlit run app.py
-```
-
-Access the application at `http://localhost:8501`
-
-### For Regular Users
-1. **Sign Up** - Create your account with email and password
-2. **Profile Setup** - Configure your skills, preferences, and job criteria
-3. **Process Jobs** - Run the job search and let AI score opportunities
-4. **Review Applications** - Check generated cover letters and applications
-5. **Apply** - Use the generated content to apply for jobs
-
-### For Admin Users
-1. **Access Admin Panel** - Additional tab available after login
-2. **Manage Users** - Create, edit, activate/deactivate user accounts
-3. **System Overview** - Monitor application performance and usage
-4. **Job Analytics** - View success rates and job processing statistics
-5. **System Maintenance** - Database cleanup and system tools
-
-## 📁 Project Structure
-
-```
-upwork-ai-jobs-applier/
-├── app.py                          # Main Streamlit application
-├── src/
-│   ├── database.py                 # Database management and schema
-│   ├── job_processor.py            # Core job processing logic
-│   ├── user_job_processor.py       # User-specific job processing
-│   ├── manual_job_processor.py     # Manual job processing utilities
-│   └── utils.py                    # Helper functions
-├── data/
-│   ├── users/                      # User-specific data directories
-│   ├── applications/               # Generated applications
-│   └── high_score_notifications.json # High-score job alerts
-├── .streamlit/
-│   └── config.toml                 # Streamlit configuration
-├── docs/
-│   ├── AUTHENTICATION_README.md    # Authentication system documentation
-│   ├── ADMIN_SETUP.md             # Admin setup and usage guide
-│   └── APPLICATIONS_PAGE_FIXES.md  # Technical fixes documentation
-└── requirements.txt                # Python dependencies
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file with your API keys and configuration:
-
-```env
-# Add your API keys here
-OPENAI_API_KEY=your_openai_key_here
-# Add other configuration variables as needed
-```
-
-### Job Search Criteria
-Modify the job search parameters in the application settings to match your:
-- Skills and expertise
-- Desired job categories
-- Budget preferences
-- Experience level
-
-## 🛡️ Security Features
-
-- **Password Security**: PBKDF2-SHA256 hashing with 100,000 iterations
-- **Session Management**: Secure session tokens with automatic expiration
-- **User Isolation**: Complete separation of user data and applications
-- **Admin Controls**: Granular permissions and system management tools
-- **Data Protection**: Sensitive files excluded from version control
-
-## 📊 Database Schema
-
-The application uses SQLite with the following main tables:
-- `users` - User accounts and authentication
-- `user_sessions` - Active user sessions
-- `jobs` - Job listings and processing results
-- Admin functions for user and system management
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-1. Check the documentation in the `docs/` directory
-2. Review the issue tracker for common problems
-3. Create a new issue for bugs or feature requests
-
-## 🔄 Version History
-
-- **v1.0.0** - Initial release with basic job processing
-- **v2.0.0** - Added multi-user authentication system
-- **v2.1.0** - Implemented admin panel and user management
-- **v2.2.0** - Added high-score notifications and enhanced analytics
+- **Dynamic Cover Letter Creation**: AI agents crafts custom cover letters based on each job description and.
+- **Personalized Content**: Tailors cover letters to reflect the user’s unique writing style, skills, and relevant experiences.
+- **Interview Script and Questions**: Prepares a list of potential interview questions and a script for the freelancer, covering job-specific topics to improve interview readiness.
+- **Keyword Optimization**: Incorporates job-related keywords to enhance proposal relevance and client interest.
 
 ---
 
-**⚠️ Disclaimer**: This tool is for educational purposes. Always review generated content before submitting job applications and ensure compliance with Upwork's terms of service.
+## How It Works
+
+1. **User Input**: The process starts with the user entering a job title.
+2. **Job Scraping**: The system scrapes Upwork for job listings that match the user-provided search queries, gathering relevant opportunities in real-time.
+3. **Job Scoring and Filtering**: Each job is scored by an AI agent, and only jobs with a score of 7/10 or higher are presented to the freelancer, filtering out lower-quality matches.
+5. **Cover Letter and Interview Preparation**: For strong job matches, the system generates:
+   - A personalized cover letter emphasizing the user’s qualifications and alignment with the job.
+   - A custom interview preparation script including potential questions to prepare the user for discussions with potential clients.
+6. **Review and Submission**: The generated cover letter, interview script, and questions are saved for user review, allowing for final adjustments before submission to prospective clients.
+
+### System Flowchart
+
+This is the detailed flow of the system:
+
+[![](https://mermaid.ink/img/pako:eNqdlMGO2jAQhl_FMlJPoNJyKETtSiEBxGqL2rJ7Sjg49oRYBDuyHegKePc6TlKye1olUiJP8n_zz4xiXzCVDLCH94oUGXoOY4Hs9Ri9aFBoLYrSaPQoE_TMTQ47NBo9ID_aUqsG9FKcpTpUn_Wu5nwnmFuBVIBqGesK6ue8kl1r0Xf07fOX8RWF623g_wmjkGtKFENP8jyqFFzsuwm66MOPhg0uQQb0gFKpXLE_iaEZ6FvXM3DgLyUpaNeStp7RCgQoYsBhflHknBLDpUCBFAaE2XXhjWwzX9FiE0b2ftNW6Lpf3JMG8mSn-ATGgNp1Ncu7Zm191InDuRoXLwz6hH6XoKsi3g5t4chVtCUnQC3uhvuu2GUtrIOVC4JY1KE2r7ltFqU8z70BTdOhNkoewBtMJpNmPTpzZjLva_F3SGUulTcYj8dd3G_wdHbHp9PpR_F5gydJL_egdU-SPnjYuqe98EXrns764Mv_o-uFrxp81s-92WNNEsZYrwlseiXAQ3wEdSSc2dPmUiWMscngCDH27JIRdYhxLG5WR0ojt6-CYs-oEoZYyXKfYS8lubZRWTD744ec2CPr2Ly9_QPS1oVz?type=png)](https://mermaid.live/edit#pako:eNqdlMGO2jAQhl_FMlJPoNJyKETtSiEBxGqL2rJ7Sjg49oRYBDuyHegKePc6TlKye1olUiJP8n_zz4xiXzCVDLCH94oUGXoOY4Hs9Ri9aFBoLYrSaPQoE_TMTQ47NBo9ID_aUqsG9FKcpTpUn_Wu5nwnmFuBVIBqGesK6ue8kl1r0Xf07fOX8RWF623g_wmjkGtKFENP8jyqFFzsuwm66MOPhg0uQQb0gFKpXLE_iaEZ6FvXM3DgLyUpaNeStp7RCgQoYsBhflHknBLDpUCBFAaE2XXhjWwzX9FiE0b2ftNW6Lpf3JMG8mSn-ATGgNp1Ncu7Zm191InDuRoXLwz6hH6XoKsi3g5t4chVtCUnQC3uhvuu2GUtrIOVC4JY1KE2r7ltFqU8z70BTdOhNkoewBtMJpNmPTpzZjLva_F3SGUulTcYj8dd3G_wdHbHp9PpR_F5gydJL_egdU-SPnjYuqe98EXrns764Mv_o-uFrxp81s-92WNNEsZYrwlseiXAQ3wEdSSc2dPmUiWMscngCDH27JIRdYhxLG5WR0ojt6-CYs-oEoZYyXKfYS8lubZRWTD744ec2CPr2Ly9_QPS1oVz)
+
+---
+
+## Tech Stack
+
+-   **LangGraph & LangChain**: Frameworks used for building AI agents and interacting with LLMs (GPT-4o, Llama 3, Gemini).
+-   **LangSmith**: For monitoring the different LLM calls and AI agents' interactions.
+-   **Playwright**: For scraping and crawling websites.
+
+---
+
+## How to Run
+
+### Setup
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/kaymen99/Upwork-AI-jobs-applier.git
+   cd Upwork-AI-jobs-applier
+   ```
+
+2. **Set up environment variables:**
+
+   Create a `.env` file in the root directory of the project and add your API keys, see `.env.example` to know all the parameters you will need.
+
+### Run Locally
+
+#### Prerequisites
+
+- Python 3.9+
+- Necessary Python libraries (listed in `requirements.txt`)
+- API keys for LLM models you want to use (OpenAI, Claude, Gemini, Groq,...)
+
+#### Running the Application
+
+1. **Create and activate a virtual environment:**
+
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
+
+2. **Install the required packages:**
+
+   ```sh
+   pip install -r requirements.txt
+   playwright install firefox
+   ```
+
+3. **Start the workflow:**
+
+   ```sh
+   python main.py
+   ```
+
+   The application will start scraping job listings, classifying them, generating cover letters, and saving the results. By default, all the generated cover letters will be saved in the `data/cover_letter.txt` file alongside a csv file including all the jobs details.
+
+4. **Test the Upwork jobs scraping tool** by running:
+
+   ```sh
+   python scrape_upwork_jobs.py
+   ```
+
+---
+
+### Run in Docker
+
+#### Prerequisites
+
+- Docker installed on your machine.
+- API keys for LLM models you want to use (OpenAI, Claude, Gemini, Groq,...)
+
+#### Running the Application
+
+1. **Build and run the Docker container:**
+
+   ```sh
+   docker build -t upwork-auto-jobs-applier-using-ai .
+   docker run -e OPENAI_API_KEY=YOUR_API_KEY_HERE -v ./data:/usr/src/app/data upwork-auto-jobs-applier-using-ai
+   ```
+
+   The application will start scraping job listings, classifying them, generating cover letters, and saving the results. By default, all the generated cover letters will be saved in the `data/cover_letters.txt` file.
+
+2. **Test the Upwork jobs scraping tool** in Docker by running:
+
+   ```sh
+   docker run -e OPENAI_API_KEY=YOUR_API_KEY_HERE -v ./data:/usr/src/app/data upwork-auto-jobs-applier-using-ai python scrape_upwork_jobs.py
+   ```
+
+---
+
+### Customization
+
+- To use this automation for your own profile, just add your profile into `files/profile.md` and remove the example profile.
+
+- You can customize the behavior of each AI agent by modifying the corresponding agent prompt in the `prompts` script.
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for any changes.
+
+## Contact
+
+If you have any questions or suggestions, feel free to contact me at `aymenMir1001@gmail.com`.

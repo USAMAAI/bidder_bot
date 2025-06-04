@@ -27,6 +27,10 @@ def ensure_db_exists():
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='user_sessions'")
         sessions_exists = cursor.fetchone() is not None
         
+        # Check for prompts table
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='prompts'")
+        prompts_exists = cursor.fetchone() is not None
+        
         # Check if jobs table has user_id column
         cursor.execute("PRAGMA table_info(jobs)")
         columns = [row[1] for row in cursor.fetchall()]
@@ -35,7 +39,7 @@ def ensure_db_exists():
         conn.close()
         
         # Create missing tables or columns
-        if not users_exists or not sessions_exists or not jobs_has_user_id:
+        if not users_exists or not sessions_exists or not jobs_has_user_id or not prompts_exists:
             print("Upgrading database schema...")
             create_user_tables()
 
@@ -93,6 +97,22 @@ def create_tables():
         client_company_profile TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (user_id)
+    )
+    ''')
+    
+    # Create prompts table for admin-managed prompts
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS prompts (
+        prompt_id TEXT PRIMARY KEY,
+        prompt_type TEXT NOT NULL,
+        prompt_name TEXT NOT NULL,
+        prompt_content TEXT NOT NULL,
+        is_active BOOLEAN DEFAULT 1,
+        created_by TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (created_by) REFERENCES users (user_id),
+        UNIQUE(prompt_type)
     )
     ''')
     
@@ -161,6 +181,22 @@ def create_user_tables():
                 print("Admin column added to users table")
         except sqlite3.OperationalError as e:
             print(f"Note: Users table modification: {e}")
+        
+        # Create prompts table for admin-managed prompts
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS prompts (
+            prompt_id TEXT PRIMARY KEY,
+            prompt_type TEXT NOT NULL,
+            prompt_name TEXT NOT NULL,
+            prompt_content TEXT NOT NULL,
+            is_active BOOLEAN DEFAULT 1,
+            created_by TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (created_by) REFERENCES users (user_id),
+            UNIQUE(prompt_type)
+        )
+        ''')
         
         conn.commit()
         print("User authentication tables created successfully!")
@@ -880,3 +916,186 @@ def toggle_user_status(user_id: str, admin_user_id: str) -> bool:
         print(f"Error toggling user status: {e}")
         conn.close()
         return False
+
+# ========================
+# PROMPT MANAGEMENT FUNCTIONS
+# ========================
+
+def generate_prompt_id(prompt_type: str) -> str:
+    """Generate a unique prompt ID."""
+    timestamp = datetime.now().isoformat()
+    unique_string = f"{prompt_type}_{timestamp}"
+    return hashlib.sha256(unique_string.encode()).hexdigest()[:16]
+
+def create_or_update_prompt(prompt_type: str, prompt_name: str, prompt_content: str, admin_user_id: str) -> tuple:
+    """Create or update a prompt. Only admins can manage prompts."""
+    if not is_admin_user(admin_user_id):
+        return False, "Only administrators can manage prompts"
+    
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    try:
+        # Check if prompt type already exists
+        cursor.execute("SELECT prompt_id FROM prompts WHERE prompt_type = ?", (prompt_type,))
+        existing = cursor.fetchone()
+        
+        if existing:
+            # Update existing prompt
+            cursor.execute('''
+            UPDATE prompts 
+            SET prompt_name = ?, prompt_content = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE prompt_type = ?
+            ''', (prompt_name, prompt_content, prompt_type))
+            action = "updated"
+        else:
+            # Create new prompt
+            prompt_id = generate_prompt_id(prompt_type)
+            cursor.execute('''
+            INSERT INTO prompts (prompt_id, prompt_type, prompt_name, prompt_content, created_by)
+            VALUES (?, ?, ?, ?, ?)
+            ''', (prompt_id, prompt_type, prompt_name, prompt_content, admin_user_id))
+            action = "created"
+        
+        conn.commit()
+        conn.close()
+        return True, f"Prompt {action} successfully"
+        
+    except Exception as e:
+        conn.close()
+        return False, str(e)
+
+def get_prompt_by_type(prompt_type: str) -> dict:
+    """Get a prompt by its type."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    SELECT * FROM prompts 
+    WHERE prompt_type = ? AND is_active = 1
+    ''', (prompt_type,))
+    
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result:
+        return dict(result)
+    return None
+
+def get_all_prompts(admin_user_id: str = None) -> list:
+    """Get all prompts. Only admins can view all prompts."""
+    if admin_user_id and not is_admin_user(admin_user_id):
+        return []
+    
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+    SELECT p.*, u.username as created_by_username
+    FROM prompts p
+    LEFT JOIN users u ON p.created_by = u.user_id
+    WHERE p.is_active = 1
+    ORDER BY p.prompt_type, p.created_at DESC
+    ''')
+    
+    results = cursor.fetchall()
+    conn.close()
+    
+    return [dict(row) for row in results]
+
+def delete_prompt(prompt_type: str, admin_user_id: str) -> tuple:
+    """Delete a prompt by type. Only admins can delete prompts."""
+    if not is_admin_user(admin_user_id):
+        return False, "Only administrators can delete prompts"
+    
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute("DELETE FROM prompts WHERE prompt_type = ?", (prompt_type,))
+        if cursor.rowcount > 0:
+            conn.commit()
+            conn.close()
+            return True, "Prompt deleted successfully"
+        else:
+            conn.close()
+            return False, "Prompt not found"
+    except Exception as e:
+        conn.close()
+        return False, str(e)
+
+def initialize_default_prompts(admin_user_id: str):
+    """Initialize default prompts if they don't exist."""
+    if not is_admin_user(admin_user_id):
+        return False, "Only administrators can initialize prompts"
+    
+    # Default cover letter prompt
+    default_cover_letter_prompt = """# ROLE
+
+You are an Upwork cover letter specialist, crafting targeted and personalized proposals. 
+Create persuasive cover letters that align with job requirements while highlighting the freelancer's skills and experience.
+
+## Relevant Information about Freelancer:
+<profile>
+{profile}
+</profile>
+
+# SOP
+
+1. Address the client's needs directly, focusing on how the freelancer can solve their challenges or meet their goals.
+2. Highlight relevant skills and past projects from the freelancer's profile that demonstrate expertise in meeting the job requirements.
+3. Show genuine enthusiasm for the job, using a friendly and casual tone.
+4. Keep the cover letter under 150 words, ensuring it is concise and easy to read.
+5. Use job-related keywords naturally to connect with the client's priorities.
+6. Follow the format and style of the example letter, emphasizing the freelancer's ability to deliver value.
+7. Avoid using generic words like "hardworking", "dedicated" or "expertise".
+
+# Example Letter:
+<letter>
+Hi there,  
+
+I'm really excited about the chance to work on AI-driven solutions for OpenAI! With my experience in AI development and automation, I'm confident I can make a real impact.  
+
+Here are a few things I've worked on:  
+- Built an AI voice assistant that handled customer queries and improved communication—great for creating voice systems like yours.  
+- Designed an AI email automation system to save time by automating responses and admin tasks.  
+- Developed an AI outreach tool for lead generation, personalized emails, and prospecting.  
+
+I'd love to chat about how I can help streamline your operations, improve automation, and drive growth for OpenAI!  
+
+Looking forward to it,  
+Aymen  
+</letter>
+
+# **IMPORTANT**
+* **My name is: Aymen**; include it at the end of the letters.
+* Follow the example letter format and style.
+* ** Take into account the proposal requirements if they are provided.**
+* Do not invent any information that is not present in my profile.
+* **Use simple, friendly and casual tone throughout the letter**."""
+
+    # Default interview preparation prompt
+    default_interview_prompt = """You are a **freelance interview preparation coach**. Your task is to create a tailored call script for a freelancer preparing for an interview with a client. The script should help the freelancer confidently discuss their qualifications and experiences relevant to the job description provided.
+
+## Relevant Information about Freelancer:
+<profile>
+{profile}
+</profile>
+
+# Instructions:
+1. Start with a brief introduction the freelancer can use to introduce themselves.
+2. Include key points the freelancer should mention regarding their relevant experience and skills related to the job.
+3. List 10 potential questions that the client might ask during the interview.
+4. Suggest 10 questions the freelancer might ask the client to demonstrate interest and clarify project details.
+5. Maintain a friendly and professional tone throughout the script.
+
+# Output:
+Return your final output in markdown format."""
+
+    # Create default prompts
+    create_or_update_prompt("cover_letter", "Default Cover Letter Template", default_cover_letter_prompt, admin_user_id)
+    create_or_update_prompt("interview_prep", "Default Interview Preparation Template", default_interview_prompt, admin_user_id)
+    
+    return True, "Default prompts initialized successfully"
